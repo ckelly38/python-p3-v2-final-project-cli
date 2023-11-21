@@ -14,18 +14,27 @@ def get_all(cls):
 
 def create(cls):
     if (isClsCorrectType(cls)):
+        #get the inputs
+        #then load them into the cls.create()
         pass;
-    else: raise Exception("the class is not the correct type!");
+    else: print("the class is not the correct type!");
 
 def update(cls):
     if (isClsCorrectType(cls)):
+        #first get the id input from the user
+        #then get the item by id
+        #then get the other inputs
+        #then load them into the cls.update(params);
         pass;
-    else: raise Exception("the class is not the correct type!");
+    else: print("the class is not the correct type!");
 
 def delete(cls):
     if (isClsCorrectType(cls)):
+        #first get the id input from the user
+        #then get the item by id
+        #then call delete on the item: cls.delete();
         pass;
-    else: raise Exception("the class is not the correct type!");
+    else: print("the class is not the correct type!");
 
 def exit_program():
     print("Goodbye!")
