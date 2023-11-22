@@ -197,7 +197,7 @@ class MyTable(MyBase):
         else: raise Exception("vals must be a defined tuple!");
         mylist = [vals[i] for i in range(len(vals))];
         mylist.append(self.id);
-        mynwvals = tuple(self.id);
+        mynwvals = tuple(mylist);
         #CURSOR.execute("UPDATE tablename SET cola = ?, colb = ?, colc = ? WHERE id = ?", (?, ?, ?));
         CURSOR.execute(MyTable.getBase().genSQLCommand("UPDATE") + "id = ", mynwvals);
         CONN.commit();
