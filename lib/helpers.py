@@ -55,7 +55,7 @@ def find_by(cls, typestr):
 
 def create(cls):
     if (isClsCorrectType(cls)):
-        #get the inputs
+        #get the inputs excluding the id, because that does not exist yet
         #then load them into the cls.create()
         pass;
     else: print("the class is not the correct type!");

@@ -5,8 +5,8 @@
 #constructor
 #find by id
 #view related objects
-from models.__init__ import CURSOR, CONN;
-from models.mycol import MyCol;
+from __init__ import CURSOR, CONN;#models.
+from mycol import MyCol;#models.
 class MyBase:
     def __init__(self, tablename = "", cols = None):
         #an array of colobjs
@@ -169,7 +169,7 @@ class MyTable(MyBase):
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a defined tuple!");
         #print("cls constructor called inside of create()!");
-        mitem = cls();
+        mitem = cls(vals);
         #print("DONE with cls constructor now calling save()!");
         mitem.save(vals);
         cls.all.append(mitem);
@@ -182,6 +182,9 @@ class MyTable(MyBase):
                 if (item.id == mid): return item;
             return None;
         else: raise Exception("mid must be a positive or zero integer!");
+
+    @classmethod
+    def getById(cls, mid): return cls.getTableRowById(mid);
 
     def save(self, vals):
         if (type(vals) == tuple): pass;
@@ -199,7 +202,7 @@ class MyTable(MyBase):
         mylist.append(self.id);
         mynwvals = tuple(mylist);
         #CURSOR.execute("UPDATE tablename SET cola = ?, colb = ?, colc = ? WHERE id = ?", (?, ?, ?));
-        CURSOR.execute(MyTable.getBase().genSQLCommand("UPDATE") + "id = ", mynwvals);
+        CURSOR.execute(MyTable.getBase().genSQLCommand("UPDATE") + "id = ?", mynwvals);
         CONN.commit();
 
     def delete(self):
@@ -214,10 +217,12 @@ class MyTable(MyBase):
 #from models.mytable import MyTable;
 class Name(MyTable):
     __calledinittable = False;
-    def __init__(self):
+    def __init__(self, vals):
         super().__init__();
         Name.inittable();
-        self.setMyText("");
+        if (type(vals) == tuple): pass;
+        else: raise Exception("vals must be a tuple!");
+        self.setMyText(vals[0]);
 
     @classmethod
     def inittable(cls):
@@ -240,18 +245,23 @@ class Name(MyTable):
         return f"<Name id={self.id} mytext={self.mytext}>";
     
 #MyTable.__tablename;
-#print(Name.getTableName());
-#print(Name.all);
-#print(Name.getBase().getColListAsString(True));
-#Name.setTableName("something");
-#if (False): Name.delete_table();
-#Name.make_table();
-#print("calling create on Name class!");
-#mn = Name.create(("test",));
-#print(mn.id);
-#Name.delete_table();
-#print(Name.all);
-#mstr = input("Proceed: ");
-#mn.delete();
-#print(Name.all);
-#Name.delete_table();
+print(Name.getTableName());
+print(Name.all);
+print(Name.getBase().getColListAsString(True));
+if (False): Name.delete_table();
+Name.make_table();
+print("calling create on Name class!");
+mn = Name.create(("test",));
+print(mn.id);
+print(Name.all);
+print(Name.getTableRowById(1));
+mn.setMyText("other");
+mn.update(("other",));
+print(Name.all);
+print(Name.getTableRowById(1));
+mstr = input("Proceed: ");
+if (mstr in ["y", "Y", "yes", "Yes", "YES"]): pass;
+else: exit();
+mn.delete();
+print(Name.all);
+Name.delete_table();
