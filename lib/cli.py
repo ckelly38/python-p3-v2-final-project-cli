@@ -1,6 +1,8 @@
 # lib/cli.py
 
 from helpers import *;
+from models.__init__ import CURSOR, CONN;
+from models.model_1 import Name;
 
 #For EACH class in the data model, the CLI must include options:
 #to create an object, delete an object, display all objects, view related objects, and
@@ -13,17 +15,17 @@ def genPartialMenuStrs(opts, bfrstr="", aftrstr=""):
     return mstrs;
 
 def genMenuStrs():
-    findoptsstrs = genPartialMenuStrs(["Id"], "Find an instance by ", " for ");
+    findoptsstrs = genPartialMenuStrs(["ID"], "Find an instance by ", " for ");
     crudoptsstrs = genPartialMenuStrs(["Create a new", "Update an", "Delete an"], "", " instance of ");
-    findoptsfuncs = [None];
+    findoptsfuncs = [find_by_id];
     crudfuncts = [create, update, delete];
     optsbeforefind = ["List all instances of "];
-    functsoptsbeforefind = [get_all];
+    functsoptsbeforefind = [list_all];
     myopts = [optsbeforefind, findoptsstrs, crudoptsstrs];
     myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts];
-    mytypes = ["typea", "typeb", "typec"];
+    mytypes = ["Name"];#, "typeb", "typec"
     mstrs = [];
-    mytypeclasses = [None, None, None];
+    mytypeclasses = [Name];#, None, None
     myfunccallsnotype = [];
     myfunccalltypeonly = [];
     for i in range(len(mytypes)):
