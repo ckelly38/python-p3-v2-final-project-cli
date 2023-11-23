@@ -5,263 +5,190 @@
 #constructor
 #find by id
 #view related objects
-from __init__ import CURSOR, CONN;#models.
+
+#A Swim League has Many Swim Teams
+#A Swim Team has Many Swimmers
+#
+#A Swim Leage has a name, an ID, an age, and people to manage it
+#
+#A Swim Team has a name, an ID, an age, equipment, people to manage it and meets
+#
+#A Swimmer has a name, an ID, an age, equipment, and parents to manage it.
+
+#from __init__ import CURSOR, CONN;#models.
 from mycol import MyCol;#models.
-class MyBase:
-    def __init__(self, tablename = "", cols = None):
-        #an array of colobjs
-        #column name, type, ispkey, isfkey
-        self.setTableName(tablename);
-        self.setCols(cols);
-    
-    def getTableName(self):
-        if (type(self._tablename) == str and 0 < len(self._tablename)):
-            return self._tablename;
-        else: raise Exception("tablename must not be an empty string!");
-
-    def setTableName(self, val):
-        if (type(val) == str): self._tablename = val;
-        else: raise Exception("tablename must be a string!");
-
-    tablename = property(getTableName, setTableName);
-
-    def setCols(self, val):
-        if (val == None or len(val) < 1):
-            if (self._cols == None): pass;
-            else: self._cols.clear();
-            self._cols = val;
-        else:
-            for item in val:
-                if (isinstance(item, MyCol)): pass;
-                else: raise Exception("the item must be of type MyCol, but it was not!");
-        self._cols = val;
-    
-    def getCols(self): return self._cols;
-
-    cols = property(getCols, setCols);
-
-    def valMustBeBool(self, val, varname = "var"):
-        if (type(varname) == str and 0 < len(varname)): pass;
-        else: raise Exception("varname must be a string with at least one character!");
-        if (val == True or val == False): return True;
-        else: raise Exception("" + varname + " must be a boolean value, but it was not");
-
-    def getColListAsString(self, usefull, noid = False, useaddstronly = False, addstr = ""):
-        self.valMustBeBool(usefull, "usefull");
-        self.valMustBeBool(noid, "noid");
-        self.valMustBeBool(useaddstronly, "useaddstronly");
-        if (type(addstr) == str): pass;
-        else: raise Exception("addstring must be a string!");
-        mystr = "(";
-        for n in range(len(self.cols)):
-            skipcol = False;
-            if (usefull): mystr += self.cols[n].__repr__();
-            else:
-                clnmstr = "" + self.cols[n].getColName();
-                if (noid):
-                    if (clnmstr == "id"): skipcol = True;
-                    else: skipcol = False;
-                if (skipcol): pass;
-                else:
-                    if (useaddstronly): mystr += "" + addstr;
-                    else: mystr += "" + clnmstr + "" + addstr;
-            if ((n + 1 < len(self.cols)) and (usefull or not skipcol)): mystr += ", ";
-        return mystr + ")";
-
-    def getNameEqualsColList(self):
-        mystr = self.getColListAsString(False, True, False, " = ?");
-        #usefull False, noid True, useaddstronly False, addstr " = ?"
-        return mystr[1:-1];#remove the () surrounding it
-
-    def replaceQuestionsForValues(self, noid = True):
-        #usefull False, noid True, useaddstronly True, addstr " = ?"
-        return "" + self.getColListAsString(False, noid, True, "?");
-
-    def genSQLCommand(self, commandtypestr, noidoninsert = True):
-        self.valMustBeBool(noidoninsert, "noidoninsert");
-        basecmdstr = "" + commandtypestr + " " + self.getTableName();
-        print(f"basecmdstr = {basecmdstr}");
-        if (commandtypestr == "CREATE TABLE"):
-            return "" + basecmdstr + " " + self.getColListAsString(True);
-        elif (commandtypestr == "DELETE FROM"):
-            print(basecmdstr + " WHERE ");
-            return "" + basecmdstr + " WHERE "; 
-        elif (commandtypestr == "DROP TABLE"):
-            print(basecmdstr);
-            return "" + basecmdstr;
-        elif (commandtypestr == "INSERT INTO"):
-            mystr = "" + basecmdstr + " ";
-            if (noidoninsert): mystr += self.getColListAsString(False, True, False, "");
-            else: mystr += self.getColListAsString(False, False, False, "");
-            mystr += " VALUES " + self.replaceQuestionsForValues(noidoninsert);
-            print(mystr);
-            return "" + mystr;
-        elif (commandtypestr == "UPDATE"):
-            mystr = "" + basecmdstr + " SET " + self.getNameEqualsColList() + " WHERE ";
-            print(mystr);
-            return "" + mystr;
-        else: raise Exception("INVALID SQL COMMAND TYPE!");
-
-#from models.__init__ import CURSOR, CONN;
-#from models.mycol import MyCol;
-#from models.mybase import MyBase;
-class MyTable(MyBase):
-    all = [];
-    __tablename = "";
-    __mycols = [MyCol("id", "INTEGER", True, False)];
-    __mybase = MyBase(__tablename, __mycols);
-
-    def __init__(self, id=None):
-        #super().__init__(self.__tablename, self.__mycols);
-        if (id == None): pass;
-        else: self.setId(id);
-    
-    def setId(self, val):
-        if (type(val) == int and (0 < val or val == 0)): self._id = val;
-        else: raise Exception("id must be an integer!");
-
-    def getId(self): return self._id;
-
-    id = property(getId, setId);
-
-    @classmethod
-    def addCols(cls, mcolslist):
-        #print(len(mcolslist));
-        for col in mcolslist:
-            cls.__mycols.append(col);
-            #print(f"Added col: {col}");
-        #print(cls.getBase().getColListAsString(True));
-        return True;
-    
-    @classmethod
-    def getBase(cls): return cls.__mybase;
-
-    @classmethod
-    def make_table(cls):
-        cls.makeSureCallerTableIsSetUp();
-        #CURSOR.execute("CREATE tablename (id INTEGER PRIMARY KEY, cola TYPEA FOREIGN KEY,
-        #colb TYPEB, colc, TYPEC)");
-        CURSOR.execute(cls.getBase().genSQLCommand("CREATE TABLE"));
-        CONN.commit();
-
-    @classmethod
-    def makeSureCallerTableIsSetUp(cls):
-        if (cls.getTableName() == ""): cls.inittable();
-
-    @classmethod
-    def delete_table(cls):
-        cls.makeSureCallerTableIsSetUp();
-        #CURSOR.execute("DROP TABLE tablename");
-        CURSOR.execute(cls.getBase().genSQLCommand("DROP TABLE"));
-        CONN.commit();
-        cls.all.clear();
-
-    @classmethod
-    def getTableName(cls): return "" + cls.__tablename;
-
-    @classmethod
-    def setTableName(cls, val):
-        cls.getBase().setTableName(val);
-        cls.__tablename = cls.getBase().getTableName();
-    
-    @classmethod
-    def create(cls, vals):
-        if (type(vals) == tuple): pass;
-        else: raise Exception("vals must be a defined tuple!");
-        #print("cls constructor called inside of create()!");
-        mitem = cls(vals);
-        #print("DONE with cls constructor now calling save()!");
-        mitem.save(vals);
-        cls.all.append(mitem);
-        return mitem;
-    
-    @classmethod
-    def getTableRowById(cls, mid):
-        if (type(mid) == int and (mid == 0 or 0 < mid)):
-            for item in cls.all:
-                if (item.id == mid): return item;
-            return None;
-        else: raise Exception("mid must be a positive or zero integer!");
-
-    @classmethod
-    def getById(cls, mid): return cls.getTableRowById(mid);
-
-    def save(self, vals):
-        if (type(vals) == tuple): pass;
-        else: raise Exception("vals must be a defined tuple!");
-        #res = CURSOR.execute("INSERT INTO tablename (cola, colb, colc) VALUES ?, ?, ?", (?, ?, ?)");
-        print(vals);
-        CURSOR.execute(MyTable.getBase().genSQLCommand("INSERT INTO"), vals);
-        CONN.commit();
-        self.setId(CURSOR.lastrowid);
-
-    def update(self, vals):
-        if (type(vals) == tuple): pass;
-        else: raise Exception("vals must be a defined tuple!");
-        mylist = [vals[i] for i in range(len(vals))];
-        mylist.append(self.id);
-        mynwvals = tuple(mylist);
-        #CURSOR.execute("UPDATE tablename SET cola = ?, colb = ?, colc = ? WHERE id = ?", (?, ?, ?));
-        CURSOR.execute(MyTable.getBase().genSQLCommand("UPDATE") + "id = ?", mynwvals);
-        CONN.commit();
-
-    def delete(self):
-        CURSOR.execute(MyTable.getBase().genSQLCommand("DELETE FROM") + "id = ?", (self.id,));
-        CONN.commit();
-        MyTable.all.remove(MyTable.getTableRowById(self.id));
-
-    @classmethod
-    def get_all(cls): return cls.all;
-
-#from models.mycol import MyCol;
-#from models.mytable import MyTable;
-class Name(MyTable):
+from mytable import MyTable;#models.
+class SwimmerBase(MyTable):
     __calledinittable = False;
     def __init__(self, vals):
         super().__init__();
-        Name.inittable();
+        SwimmerBase.inittable();
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a tuple!");
-        self.setMyText(vals[0]);
+        self.setName(vals[0]);
+        self.setAge(vals[1]);
+
+    @classmethod
+    def getRequiredTableName(cls): return "something";
+
+    @classmethod
+    def inittable(cls, tn = "something", useanyways = False):
+        print(f"tn = {tn}");
+        print(f"SwimmerBase.__calledinittable = {SwimmerBase.__calledinittable}");
+        print(f"cls = {cls}");
+        super().valMustBeBool(useanyways, "useanyways");
+        if (SwimmerBase.__calledinittable and not useanyways): return;
+        cls.setTableName(tn);
+        print("calling addCols inside of SwimmerBase class now!");
+        cls.addCols([MyCol("name", "TEXT", False, False), MyCol("age", "INTEGER", False, False)]);
+        print("done with addCols inside of SwimmerBase class!");
+        SwimmerBase.__calledinittable = True;
+
+    def setName(self, val):
+        if (type(val) == str): self._name = "" + val;
+        else: raise Exception("this must be a string!");
+
+    def getName(self): return self._name;
+
+    name = property(getName, setName);
+
+    def setAge(self, val):
+        if (type(val) == int):
+            if (0 < val or val == 0): self._age = val;
+            else: raise Exception("age must be a positive or zero integer!");
+        else: raise Exception("age must be an integer!");
+
+    def getAge(self): return self._age;
+
+    age = property(getAge, setAge);
+
+    def __repr__(self, clsname = "SwimmerBase"):
+        return f"<{clsname} id={self.id} name={self.name} age={self.age}>";
+
+class SwimLeague(SwimmerBase):
+    __calledinittable = False;
+    
+    @classmethod
+    def getRequiredTableName(cls): return "swimleagues";
+    
+    @classmethod
+    def inittable(cls):
+        if (SwimLeague.__calledinittable): return;
+        super().inittable(cls.getRequiredTableName(), True);
+        SwimLeague.__calledinittable = True;
+
+    def __repr__(self):
+        return super().__repr__("SwimLeague");
+
+    @classmethod
+    def get_all(cls):
+        return [item for item in SwimmerBase.get_all() if isinstance(item, SwimLeague)];
+
+    #get all the teams in the league
+    #need to be able to get all of swimmers in the league
+
+class SwimTeam(SwimmerBase):
+    __calledinittable = False;
+    def __init__(self, vals):
+        super().__init__(vals);
+        SwimTeam.inittable();
+        self.setLeagueId(vals[2]);
+    
+    @classmethod
+    def getRequiredTableName(cls): return "swimteams";
 
     @classmethod
     def inittable(cls):
-        if (Name.__calledinittable): return;
-        cls.setTableName("something");
-        print("calling addCols inside of Name class now!");
-        cls.addCols([MyCol("mytext", "TEXT", False, False)]);
-        print("done with addCols inside of Name class!");
-        Name.__calledinittable = True;
+        if (SwimTeam.__calledinittable): return;
+        super().inittable(cls.getRequiredTableName(), True);
+        cls.addCols([MyCol("LeagueID", "INTEGER", False, True)]);
+        SwimTeam.__calledinittable = True;
 
-    def setMyText(self, val):
-        if (type(val) == str): self._mytext = "" + val;
-        else: raise Exception("this must be a string!");
+    def setLeagueId(self, val):
+        if (type(val) == int and (0 < val or val == 0)): self._leagueid = val;
+        else: raise Exception("league id must be an integer!");
 
-    def getMyText(self): return self._mytext;
+    def getLeagueId(self): return self._leagueid;
 
-    mytext = property(getMyText, setMyText);
+    leagueid = property(getLeagueId, setLeagueId);
 
     def __repr__(self):
-        return f"<Name id={self.id} mytext={self.mytext}>";
+        return super().__repr__("SwimTeam");
+
+    @classmethod
+    def get_all(cls):
+        return [item for item in SwimmerBase.get_all() if isinstance(item, SwimTeam)];
+
+    #need to be able to get all of the swimmers on the team
+    #need to be able to get the league
+    #need to be able to find team by age or name or id
+
+class Swimmer(SwimmerBase):
+    __calledinittable = False;
+    def __init__(self, vals):
+        super().__init__(vals);
+        Swimmer.inittable();
+        self.setTeamId(vals[2]);
     
+    @classmethod
+    def getRequiredTableName(cls): return "swimmers";
+
+    @classmethod
+    def inittable(cls):
+        if (Swimmer.__calledinittable): return;
+        super().inittable(cls.getRequiredTableName(), True);
+        cls.addCols([MyCol("TeamID", "INTEGER", False, True)]);
+        Swimmer.__calledinittable = True;
+
+    def setTeamId(self, val):
+        if (type(val) == int and (0 < val or val == 0)): self._teamid = val;
+        else: raise Exception("team id must be an integer!");
+
+    def getTeamId(self): return self._teamid;
+
+    teamid = property(getTeamId, setTeamId);
+
+    def __repr__(self):
+        return super().__repr__("Swimmer");
+
+    @classmethod
+    def get_all(cls):
+        return [item for item in SwimmerBase.get_all() if isinstance(item, Swimmer)];
+
+    #need to be able to get the league
+    #need to be able to get the team
+    #need to be able to find swimmer by age or name or id
+
 #MyTable.__tablename;
-print(Name.getTableName());
-print(Name.all);
-print(Name.getBase().getColListAsString(True));
-if (False): Name.delete_table();
-Name.make_table();
-print("calling create on Name class!");
-mn = Name.create(("test",));
+print(SwimmerBase.getTableName());
+print(SwimmerBase.all);
+print(SwimmerBase.getBase().getColListAsString(True));
+if (True): SwimmerBase.delete_table();
+SwimmerBase.make_table();
+print("calling create on SwimmerBase class!");
+mn = SwimmerBase.create(("test", 0));
 print(mn.id);
-print(Name.all);
-print(Name.getTableRowById(1));
-mn.setMyText("other");
-mn.update(("other",));
-print(Name.all);
-print(Name.getTableRowById(1));
+print(SwimmerBase.all);
+print(SwimmerBase.getTableRowById(1));
+mn.setName("other");
+mn.update(("other", 0));
+omn = SwimmerBase.create(("myself", 0));
+print(omn.id);
+print(SwimmerBase.all);
+print(SwimmerBase.getTableRowById(1));
+print(SwimmerBase.getTableRowById(2));
+SwimLeague.make_table();
+mhsl = SwimLeague.create(("Mountain High Swim League", 40));
+print(SwimLeague.all);#returns SwimmerBase.all
+print(SwimLeague.get_all());#returns only the SwimLeague instances
 mstr = input("Proceed: ");
-if (mstr in ["y", "Y", "yes", "Yes", "YES"]): pass;
+if (mstr in ["1", "y", "Y", "yes", "Yes", "YES"]): pass;
 else: exit();
 mn.delete();
-print(Name.all);
-Name.delete_table();
+print(SwimmerBase.all);
+mstr = input("Proceed: ");
+if (mstr in ["1", "y", "Y", "yes", "Yes", "YES"]): pass;
+else: exit();
+omn.delete();
+mhsl.delete();
+SwimmerBase.delete_table();
