@@ -3,6 +3,7 @@ class MyBase:
     def __init__(self, tablename = "", cols = None):
         #an array of colobjs
         #column name, type, ispkey, isfkey
+        print("INSIDE MYBASE CONSTRUCTOR!");
         self.setTableName(tablename);
         self.setCols(cols);
     

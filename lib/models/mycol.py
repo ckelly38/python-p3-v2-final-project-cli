@@ -1,5 +1,6 @@
 class MyCol:
     def __init__(self, colname, coltype, ispkey, isfkey):
+        print("INSIDE MYCOL CONSTRUCTOR!");
         self.setColName(colname);
         self.setColType(coltype);
         self.setIsPKey(ispkey);
