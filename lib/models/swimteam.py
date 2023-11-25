@@ -1,7 +1,7 @@
-from swimmerbase import SwimmerBase;
-from mybase import MyBase;
-from mycol import MyCol;
-from swimleague import SwimLeague;
+from models.swimmerbase import SwimmerBase;#models.
+from models.mybase import MyBase;#models.
+from models.mycol import MyCol;#models.
+from models.swimleague import SwimLeague;#models.
 class SwimTeam(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimteams", SwimmerBase.combineTwoListsOfCols(
@@ -53,7 +53,7 @@ class SwimTeam(SwimmerBase):
     #    return [item for item in SwimmerBase.get_all() if isinstance(item, SwimTeam)];
 
     def swimmers(self):
-        from swimmer import Swimmer;
+        from models.swimmer import Swimmer;
         return [swmr for swmr in Swimmer.get_all() if swmr.getTeamId() == self.getId()];
 
     def league(self): return SwimLeague.getById(self.leagueid);

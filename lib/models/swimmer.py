@@ -1,7 +1,7 @@
-from mycol import MyCol;
-from mybase import MyBase;
-from swimmerbase import SwimmerBase;
-from swimteam import SwimTeam;
+from models.mycol import MyCol;#models.
+from models.mybase import MyBase;#models.
+from models.swimmerbase import SwimmerBase;#models.
+from models.swimteam import SwimTeam;#models.
 class Swimmer(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimmers", SwimmerBase.combineTwoListsOfCols(

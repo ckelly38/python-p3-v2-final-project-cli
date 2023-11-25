@@ -1,5 +1,5 @@
-from mybase import MyBase;#models.
-from swimmerbase import SwimmerBase;
+from models.mybase import MyBase;#models.
+from models.swimmerbase import SwimmerBase;#models.
 class SwimLeague(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimleagues", SwimmerBase.getAllRequiredColumns());
@@ -38,7 +38,7 @@ class SwimLeague(SwimmerBase):
     #    return [item for item in SwimmerBase.get_all() if isinstance(item, SwimLeague)];
 
     def teams(self):
-        from swimteam import SwimTeam;
+        from models.swimteam import SwimTeam;
         return [tm for tm in SwimTeam.get_all() if tm.getLeagueId() == self.id];
 
     def swimmers(self):

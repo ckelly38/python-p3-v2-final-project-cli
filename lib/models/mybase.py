@@ -1,9 +1,9 @@
-from mycol import MyCol;
+from models.mycol import MyCol;#models.
 class MyBase:
     def __init__(self, tablename = "", cols = None):
         #an array of colobjs
         #column name, type, ispkey, isfkey
-        print("INSIDE MYBASE CONSTRUCTOR!");
+        #print("INSIDE MYBASE CONSTRUCTOR!");
         self.setTableName(tablename);
         self.setCols(cols);
     
@@ -74,15 +74,15 @@ class MyBase:
     def genSQLCommand(self, commandtypestr, noidoninsert = True):
         self.valMustBeBool(noidoninsert, "noidoninsert");
         basecmdstr = "" + commandtypestr + " " + self.getTableName();
-        print(f"basecmdstr = {basecmdstr}");
+        #print(f"basecmdstr = {basecmdstr}");
         mystr = "";
         if (commandtypestr == "CREATE TABLE"):
             mystr = "" + basecmdstr + " " + self.getColListAsString(True);
         elif (commandtypestr == "DELETE FROM"):
-            print(basecmdstr + " WHERE ");
+            #print(basecmdstr + " WHERE ");
             mystr = "" + basecmdstr + " WHERE "; 
         elif (commandtypestr == "DROP TABLE"):
-            print(basecmdstr);
+            #print(basecmdstr);
             mystr = "" + basecmdstr;
         elif (commandtypestr == "INSERT INTO"):
             mystr = "" + basecmdstr + " ";
@@ -92,5 +92,5 @@ class MyBase:
         elif (commandtypestr == "UPDATE"):
             mystr = "" + basecmdstr + " SET " + self.getNameEqualsColList() + " WHERE ";
         else: raise Exception("INVALID SQL COMMAND TYPE!");
-        print(f"final command = {mystr}");
+        #print(f"final command = {mystr}");
         return "" + mystr;

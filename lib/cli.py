@@ -2,7 +2,9 @@
 
 from helpers import *;
 from models.__init__ import CURSOR, CONN;
-from models.model_1 import Name;
+from models.swimmer import Swimmer;
+from models.swimteam import SwimTeam;
+from models.swimleague import SwimLeague;
 
 #For EACH class in the data model, the CLI must include options:
 #to create an object, delete an object, display all objects, view related objects, and
@@ -15,17 +17,24 @@ def genPartialMenuStrs(opts, bfrstr="", aftrstr=""):
     return mstrs;
 
 def genMenuStrs():
-    findoptsstrs = genPartialMenuStrs(["ID"], "Find an instance by ", " for ");
+    findoptsstrs = genPartialMenuStrs(["ID", "NAME", "AGE"], "Find an instance by ", " for ");
     crudoptsstrs = genPartialMenuStrs(["Create a new", "Update an", "Delete an"], "", " instance of ");
-    findoptsfuncs = [find_by_id];
+    #tablecrudsstrs = genPartialMenuStrs(["Create a", "Delete a"], "", " table for ");
+    reloptsstrs = ["List the Swimmers on the SwimTeam", "List the SwimLeague for the SwimTeam",
+         "List the Swimmers in the SwimLeague", "List the SwimTeams in the SwimLeague",
+         "List the SwimTeam for the Swimmer", "List the SwimLeague for the Swimmer"];
+    reloptsfuncs = [listSwimmersOnTeam, listSwimLeagueForTeam, listSwimmersForLeague,
+                    listSwimTeamsForLeague, listSwimTeamForSwimmer, listSwimLeagueForSwimmer];
+    findoptsfuncs = [find_by_id, find_by_name, find_by_age];
     crudfuncts = [create, update, delete];
+    #tablecrudfuncts = [maketable, deltable];
     optsbeforefind = ["List all instances of "];
     functsoptsbeforefind = [list_all];
-    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs];
-    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts];
-    mytypes = ["Name"];#, "typeb", "typec"
+    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs, reloptsstrs];#, tablecrudsstrs
+    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts, reloptsfuncs];#, tablecrudfuncts
+    mytypes = ["Swimmer", "SwimTeam", "SwimLeague"];
     mstrs = [];
-    mytypeclasses = [Name];#, None, None
+    mytypeclasses = [Swimmer, SwimTeam, SwimLeague];
     myfunccallsnotype = [];
     myfunccalltypeonly = [];
     for i in range(len(mytypes)):
@@ -74,4 +83,6 @@ def menu(menustrs):
 
 
 if __name__ == "__main__":
+    dropalltables();
+    makealltables();
     main(genMenuStrs());

@@ -16,8 +16,8 @@
 #A Swimmer has a name, an ID, an age, equipment, and parents to manage it.
 
 #from __init__ import CURSOR, CONN;#models.
-from mycol import MyCol;#models.
-from mytable import MyTable;#models.
+from models.mycol import MyCol;#models.
+from models.mytable import MyTable;#models.
 class SwimmerBase(MyTable):
     __calledinittable = False;
     

@@ -1,6 +1,6 @@
-from __init__ import CURSOR, CONN;#models.
-from mycol import MyCol;#models.
-from mybase import MyBase;#models.
+from models.__init__ import CURSOR, CONN;#models.
+from models.mycol import MyCol;#models.
+from models.mybase import MyBase;#models.
 class MyTable(MyBase):
     all = [];
     __tablename = "";
@@ -9,7 +9,7 @@ class MyTable(MyBase):
 
     def __init__(self, id=None):
         #super().__init__(self.__tablename, self.__mycols);
-        print("INSIDE MYTABLE CONSTRUCTOR!");
+        #print("INSIDE MYTABLE CONSTRUCTOR!");
         if (id == None): pass;
         else: self.setId(id);
 
@@ -45,7 +45,7 @@ class MyTable(MyBase):
 
     @classmethod
     def make_table(cls):
-        print(f"make_table calling class = cls = {cls}");
+        #print(f"make_table calling class = cls = {cls}");
         cls.makeSureCallerTableIsSetUp();
         #CURSOR.execute("CREATE tablename (id INTEGER PRIMARY KEY, cola TYPEA FOREIGN KEY,
         #colb TYPEB, colc, TYPEC)");
@@ -54,9 +54,9 @@ class MyTable(MyBase):
 
     @classmethod
     def makeSureCallerTableIsSetUp(cls):
-        print(f"called inittable from MYTABLE class caller class = cls = {cls}");
-        print(f"cls.getTableName() = {cls.getTableName()}");
-        print(f"cls.getRequiredTableName() = {cls.getRequiredTableName()}");
+        #print(f"called inittable from MYTABLE class caller class = cls = {cls}");
+        #print(f"cls.getTableName() = {cls.getTableName()}");
+        #print(f"cls.getRequiredTableName() = {cls.getRequiredTableName()}");
         ctnm = cls.getTableName();
         rtnm = cls.getRequiredTableName();
         if (ctnm == "" or ctnm != rtnm): cls.inittable();
@@ -81,11 +81,11 @@ class MyTable(MyBase):
     def create(cls, vals):
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a defined tuple!");
-        print("INSIDE OF MYTABLE CREATE()!");
-        print(f"cls = {cls}");
-        print("cls constructor called inside of create()!");
+        #print("INSIDE OF MYTABLE CREATE()!");
+        #print(f"cls = {cls}");
+        #print("cls constructor called inside of create()!");
         mitem = cls(vals);
-        print("DONE with cls constructor now calling save()!");
+        #print("DONE with cls constructor now calling save()!");
         mitem.save(vals);
         cls.all.append(mitem);
         return mitem;
@@ -105,7 +105,7 @@ class MyTable(MyBase):
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a defined tuple!");
         #res = CURSOR.execute("INSERT INTO tablename (cola, colb, colc) VALUES ?, ?, ?", (?, ?, ?)");
-        print(vals);
+        #print(vals);
         CURSOR.execute(self.getBase().genSQLCommand("INSERT INTO"), vals);
         CONN.commit();
         self.setId(CURSOR.lastrowid);
@@ -117,13 +117,13 @@ class MyTable(MyBase):
         mylist.append(self.id);
         mynwvals = tuple(mylist);
         #CURSOR.execute("UPDATE tablename SET cola = ?, colb = ?, colc = ? WHERE id = ?", (?, ?, ?));
-        CURSOR.execute(MyTable.getBase().genSQLCommand("UPDATE") + "id = ?", mynwvals);
+        CURSOR.execute(self.getBase().genSQLCommand("UPDATE") + "id = ?", mynwvals);
         CONN.commit();
 
     def delete(self):
-        print(self);
-        print(type(self));
-        CURSOR.execute(MyTable.getBase().genSQLCommand("DELETE FROM") + "id = ?", (self.id,));
+        #print(self);
+        #print(type(self));
+        CURSOR.execute(self.getBase().genSQLCommand("DELETE FROM") + "id = ?", (self.id,));
         CONN.commit();
         type(self).all.remove(type(self).getTableRowById(self.id));
 
