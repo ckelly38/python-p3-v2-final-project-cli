@@ -6,6 +6,7 @@ class Swimmer(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimmers", SwimmerBase.combineTwoListsOfCols(
             SwimmerBase.getAllRequiredColumns(), [MyCol("TeamID", "INTEGER", False, False)]));#True
+    all = [];
     
     def __init__(self, vals):
         print("INSIDE SWIMMER CONSTRUCTOR!");
@@ -53,12 +54,10 @@ class Swimmer(SwimmerBase):
     #    return [item for item in SwimmerBase.get_all() if isinstance(item, Swimmer)];
 
     def team(self):
-        print(self);
-        print(f"SwimmerBase.get_all() = {SwimmerBase.get_all()}");
-        print(f"SwimmerBase.all = {SwimmerBase.all}");
-        print(f"all swim teams: {SwimTeam.get_all()}");
+        #print(self);
+        #print(f"all swim teams: {SwimTeam.get_all()}");
         for tm in SwimTeam.get_all():
-            print(tm);
+            #print(tm);
             if (tm.id == self.getTeamId()): return tm;
         return None;
 

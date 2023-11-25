@@ -6,6 +6,7 @@ class SwimTeam(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimteams", SwimmerBase.combineTwoListsOfCols(
             SwimmerBase.getAllRequiredColumns(), [MyCol("LeagueID", "INTEGER", False, False)]));#True
+    all = [];
 
     def __init__(self, vals):
         print("INSIDE SWIMTEAM CONSTRUCTOR!");

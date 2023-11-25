@@ -20,6 +20,7 @@ from mycol import MyCol;#models.
 from mytable import MyTable;#models.
 class SwimmerBase(MyTable):
     __calledinittable = False;
+    
     def __init__(self, vals):
         print("INSIDE SWIMMERBASE CONSTRUCTOR!");
         super().__init__();
@@ -97,3 +98,6 @@ class SwimmerBase(MyTable):
         if (type(age) == int and (0 < age or age == 0)):
             return [item for item in cls.get_all() if item.getAge() == age];
         else: raise Exception("age must be an integer and must not be negative!");
+
+    @classmethod
+    def get_all(cls): return cls.all;

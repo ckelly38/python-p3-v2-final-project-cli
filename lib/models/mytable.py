@@ -121,9 +121,11 @@ class MyTable(MyBase):
         CONN.commit();
 
     def delete(self):
+        print(self);
+        print(type(self));
         CURSOR.execute(MyTable.getBase().genSQLCommand("DELETE FROM") + "id = ?", (self.id,));
         CONN.commit();
-        MyTable.all.remove(MyTable.getTableRowById(self.id));
+        type(self).all.remove(type(self).getTableRowById(self.id));
 
     @classmethod
     def get_all(cls): return cls.all;

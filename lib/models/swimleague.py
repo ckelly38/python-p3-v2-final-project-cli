@@ -3,6 +3,7 @@ from swimmerbase import SwimmerBase;
 class SwimLeague(SwimmerBase):
     __calledinittable = False;
     __mybase = MyBase("swimleagues", SwimmerBase.getAllRequiredColumns());
+    all = [];
     
     def __init__(self, vals):
         print("INSIDE SWIMLEAGUE CONSTRUCTOR!");
