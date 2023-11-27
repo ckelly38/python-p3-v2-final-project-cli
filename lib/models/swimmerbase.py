@@ -22,7 +22,7 @@ class SwimmerBase(MyTable):
     __calledinittable = False;
     
     def __init__(self, vals):
-        print("INSIDE SWIMMERBASE CONSTRUCTOR!");
+        #print("INSIDE SWIMMERBASE CONSTRUCTOR!");
         super().__init__();
         SwimmerBase.inittable();
         if (type(vals) == tuple): pass;
@@ -54,16 +54,16 @@ class SwimmerBase(MyTable):
 
     @classmethod
     def inittable(cls, tn = "something", useanyways = False):
-        print(f"tn = {tn}");
-        print(f"SwimmerBase.__calledinittable = {SwimmerBase.__calledinittable}");
-        print(f"cls = {cls}");
-        print(f"useanyways = {useanyways}");
+        #print(f"tn = {tn}");
+        #print(f"SwimmerBase.__calledinittable = {SwimmerBase.__calledinittable}");
+        #print(f"cls = {cls}");
+        #print(f"useanyways = {useanyways}");
         super().valMustBeBool(useanyways, "useanyways");
         if (SwimmerBase.__calledinittable and not useanyways): return;
         cls.setTableName(tn);
-        print("calling addCols inside of SwimmerBase class now!");
+        #print("calling addCols inside of SwimmerBase class now!");
         cls.addCols(SwimmerBase.getRequiredAdditionalColumns());
-        print("done with addCols inside of SwimmerBase class!");
+        #print("done with addCols inside of SwimmerBase class!");
         SwimmerBase.__calledinittable = True;
 
     def setName(self, val):

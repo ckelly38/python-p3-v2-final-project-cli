@@ -6,7 +6,7 @@ class SwimLeague(SwimmerBase):
     all = [];
     
     def __init__(self, vals):
-        print("INSIDE SWIMLEAGUE CONSTRUCTOR!");
+        #print("INSIDE SWIMLEAGUE CONSTRUCTOR!");
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a tuple!");
         self.setName(vals[0]);

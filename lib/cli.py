@@ -11,10 +11,7 @@ from models.swimleague import SwimLeague;
 #find an object by attribute.
 
 def genPartialMenuStrs(opts, bfrstr="", aftrstr=""):
-    mstrs = [];
-    for i in range(len(opts)):
-        mstrs.append(bfrstr + opts[i] + aftrstr);
-    return mstrs;
+    return [bfrstr + opts[i] + aftrstr for i in range(len(opts))];
 
 def genMenuStrs():
     findoptsstrs = genPartialMenuStrs(["ID", "NAME", "AGE"], "Find an instance by ", " for ");
@@ -30,8 +27,8 @@ def genMenuStrs():
     #tablecrudfuncts = [maketable, deltable];
     optsbeforefind = ["List all instances of "];
     functsoptsbeforefind = [list_all];
-    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs, reloptsstrs];#, tablecrudsstrs
-    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts, reloptsfuncs];#, tablecrudfuncts
+    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs];#, tablecrudsstrs
+    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts];#, tablecrudfuncts
     mytypes = ["Swimmer", "SwimTeam", "SwimLeague"];
     mstrs = [];
     mytypeclasses = [Swimmer, SwimTeam, SwimLeague];
@@ -42,42 +39,51 @@ def genMenuStrs():
             for k in range(len(myopts[n])):
                 mstrs.append(myopts[n][k] + mytypes[i]);
                 myfunccallsnotype.append(myfunctopts[n][k]);
-                myfunccalltypeonly.append(mytypeclasses[i]);  
+                myfunccalltypeonly.append(mytypeclasses[i]);
+    #, reloptsstrs, reloptsfuncs
+    for i in range(len(reloptsstrs)):
+        mstrs.append(reloptsstrs[i]);
+        myfunccallsnotype.append(reloptsfuncs[i]);
+        myfunccalltypeonly.append(None);
     return [mstrs, myfunccallsnotype, myfunccalltypeonly];
 
 
 def main(menustrs):
+    menu(menustrs);
     while True:
-        menu(menustrs)
-        choice = input("> ")
-        if choice == "0" or choice == "quit" or choice == "exit" or choice == "q": exit_program();
-        elif choice == "1" or choice == "help" or choice == "h": pass;
+        choice = input("> ");
+        if (choice in ["0", "quit", "exit", "q", "e", "QUIT", "EXIT", "Quit", "Exit"]): exit_program();
+        elif (choice in ["1", "help", "h", "Help", "HELP", "?"]): menu(menustrs);
         else:
             mnum = -1;
             noerror = True;
             try:
                 mnum = int(choice);
-            except Exception as exc:
+            except:
                 noerror = False;
-                print("Invalid choice");
+                print("Invalid choice! Your choice must be a number ");
+                print("(unless you want the \"quit\" or \"help\" options)!");
             if (noerror):
-                if (mnum < 2 or len(menustrs[0]) + 2 - 1 < mnum): print("Invalid choice");
+                if (mnum < 2 or len(menustrs[0]) + 2 - 1 < mnum):
+                    print("Invalid choice! Number is out of range (0-" +
+                          str(len(menustrs[0]) + 2 - 1) + " (inclusive))!");
                 else:
                     funcinvoked = False;
                     for n in range(len(menustrs[1])):
                         if mnum == n + 2:
-                            menustrs[1][n](menustrs[2][n]);
+                            if (menustrs[2][n] == None): menustrs[1][n]();
+                            else: menustrs[1][n](menustrs[2][n]);
                             funcinvoked = True;
                             break;
                     if (funcinvoked): pass;
-                    else: raise Exception("the function must have been invoked, but it was not!");
+                    else: raise Exception("The function must have been invoked, but it was not!");
 
 
 
 def menu(menustrs):
     print("Please select an option:");
-    print("0. Exits the program");
-    print("1. Displays this menu again");
+    print("0. Exits the program (alternatives are: quit, Quit, Exit, EXIT, QUIT, q, e)");
+    print("1. Displays this menu again (alternatives are: help, h, HELP, Help, ?)");
     for i in range(len(menustrs[0])):
         print(f"{i+2}. {menustrs[0][i]}.");
 

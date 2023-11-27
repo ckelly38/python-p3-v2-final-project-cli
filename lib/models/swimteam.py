@@ -9,7 +9,7 @@ class SwimTeam(SwimmerBase):
     all = [];
 
     def __init__(self, vals):
-        print("INSIDE SWIMTEAM CONSTRUCTOR!");
+        #print("INSIDE SWIMTEAM CONSTRUCTOR!");
         #super().__init__(vals);
         #SwimTeam.inittable();
         self.setName(vals[0]);
@@ -53,7 +53,7 @@ class SwimTeam(SwimmerBase):
     #    return [item for item in SwimmerBase.get_all() if isinstance(item, SwimTeam)];
 
     def swimmers(self):
-        from models.swimmer import Swimmer;
+        from models.swimmer import Swimmer;#models.
         return [swmr for swmr in Swimmer.get_all() if swmr.getTeamId() == self.getId()];
 
     def league(self): return SwimLeague.getById(self.leagueid);

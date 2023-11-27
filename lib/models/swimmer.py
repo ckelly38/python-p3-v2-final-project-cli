@@ -9,7 +9,7 @@ class Swimmer(SwimmerBase):
     all = [];
     
     def __init__(self, vals):
-        print("INSIDE SWIMMER CONSTRUCTOR!");
+        #print("INSIDE SWIMMER CONSTRUCTOR!");
         #super().__init__(vals);
         #Swimmer.inittable();
         self.setName(vals[0]);
