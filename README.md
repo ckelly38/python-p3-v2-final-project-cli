@@ -1,3 +1,77 @@
+# Phase 3 Project Swimmers, SwimTeams, and SwimLeagues Command Line Interface
+
+This program will first greet you with a list of options that you can choose from.
+
+# Example Run Through ONLY:
+
+Please select an option:
+0. Exits the program (alternatives are: quit, Quit, Exit, EXIT, QUIT, q, e)
+1. Displays this menu again (alternatives are: help, h, HELP, Help, ?)
+2. List all instances of Swimmer.
+3. Find an instance by ID for Swimmer.
+4. Find an instance by NAME for Swimmer.
+5. Find an instance by AGE for Swimmer.
+6. Create a new instance of Swimmer.
+7. Update an instance of Swimmer.
+8. Delete an instance of Swimmer.
+9. List all instances of SwimTeam.
+10. Find an instance by ID for SwimTeam.
+11. Find an instance by NAME for SwimTeam.
+12. Find an instance by AGE for SwimTeam.
+13. Create a new instance of SwimTeam.
+14. Update an instance of SwimTeam.
+15. Delete an instance of SwimTeam.
+16. List all instances of SwimLeague.
+17. Find an instance by ID for SwimLeague.
+18. Find an instance by NAME for SwimLeague.
+19. Find an instance by AGE for SwimLeague.
+20. Create a new instance of SwimLeague.
+21. Update an instance of SwimLeague.
+22. Delete an instance of SwimLeague.
+23. List the Swimmers on the SwimTeam.
+24. List the SwimLeague for the SwimTeam.
+25. List the Swimmers in the SwimLeague.
+26. List the SwimTeams in the SwimLeague.
+27. List the SwimTeam for the Swimmer.
+28. List the SwimLeague for the Swimmer.
+> 3
+Enter the id: 1
+Invalid id 1 used here! No Swimmers found with that id!
+> 4
+Enter the name here: Twerp
+Invalid name Twerp used here! No Swimmers found with that name!
+> 5
+Enter the age: 10
+Invalid age 10 used here! No Swimmers found with that age!
+> 0
+Goodbye!
+
+# Explanation of Options:
+
+From there, it will do one of the options that you selected.
+
+For EACH Class (Swimmer, SwimTeam, and SwimLeague), you are given options to list all instances of it and see related instances to an instance.
+
+Options: 2, 9, 16, (respectively) and 23 - 28 inclusive list all instances of something or list related objects to one instance. Look up for the instance is done via ID for 23 - 28 inclusive.
+
+For EACH Class (Swimmer, SwimTeam, and SwimLeague), you are given options to look up an instance via ID, NAME, and AGE.
+
+When asked about one instance, instance look up is usually done via ID, but you can also look it via NAME and AGE (options 3 - 5 inclusive, 10 - 12 inclusive, 17 - 19 inclusive), respecively.
+
+For EACH Class (Swimmer, SwimTeam, and SwimLeague), you have options to create a new one, update one, or delete one (options 6 - 8 inclusive, 13 - 15 inclusive, 20 - 22 inclusive), respecively.
+
+Option 0, e, q, Quit, quit, exit, Exit, EXIT, QUIT all exit the program.
+
+Option 1, help, h, Help, HELP, or ? allow you to see the menu again.
+
+If you enter something that is not allowed, it is not allowed or out of range if it was the correct type.
+
+## KNOWN ISSUE
+NOTE: Database is cleared when the interface opens, so it is synced with the instances created and displayed by the interface.
+
+# Other Notes:
+The database is an SQLite Database. So you can use the SQLite DB Browser, or VS Code and SQLite and SQLite Viewer Extensions to view it, etc. There are other tools out there to view, and modify it. Just to name a few.
+
 # Phase 3 CLI+ORM Project Template
 
 ## Learning Goals

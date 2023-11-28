@@ -86,6 +86,17 @@ def menu(menustrs):
 
 
 if __name__ == "__main__":
+    #possible known issue:
+    #when the application is closed and reopened there are no instances of the classes (objects),
+    #however, there may be information saved on the database.
+    #
+    #solution 1: remove all of the information in the database. (applied)
+    #solution 2: read in all information from the database and generate the instances from it.
+    #(not applied)
+    #
+    #solution 2 may be better, but it is not applied; making us wonder
+    #why we even have the database in the first place?
+    #
     dropalltables();
     makealltables();
     main(genMenuStrs());
