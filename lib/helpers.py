@@ -7,13 +7,19 @@ def isClsCorrectType(cls):
     return (cls == Swimmer or cls == SwimTeam or cls == SwimLeague);# or cls == ?
     #return False;
 
+def getTypeStringFrom(cls):
+    if (cls == Swimmer): return "Swimmer";
+    elif (cls == SwimTeam): return "SwimTeam";
+    elif (cls == SwimLeague): return "SwimLeague";
+    else: raise Exception("The class is not the correct type!");
+
 def get_all(cls):
     if (isClsCorrectType(cls)): return cls.get_all();
     else: raise Exception("The class is not the correct type!");
 
 def list_all(cls):
     mall = get_all(cls);
-    if (mall == None or len(mall) < 1): print("No items!");
+    if (mall == None or len(mall) < 1): print("No " + getTypeStringFrom(cls) + "s!");
     else:
         for item in mall: print(item);
 
@@ -35,29 +41,30 @@ def get_by_age(cls, age): return cls.getAllMatchAge(age);
 
 def get_by_name(cls, name): return cls.getAllMatchName(name);
 
-def find_by_id(cls, pres = True):
-    mid = getIntInputFromUser("Enter the id: ");
-    mitem = get_by_id(cls, mid);
-    if (mitem == None): print(f"Invalid id {mid} used here! No items found with that id!");
+def findByNameIdOrAge(cls, typestr, pres = True):
+    inptval = None;
+    if (typestr == "id" or typestr == "age"): inptval = getIntInputFromUser("Enter the " + typestr +": ");
+    elif (typestr == "name"): inptval = input("Enter the " + typestr + " here: ");
+    else: raise Exception("Invalid typestring found and used here!");
+    mitem = None;
+    if (typestr == "id"): mitem = get_by_id(cls, inptval);
+    elif (typestr == "age"): mitem = get_by_age(cls, inptval);
+    else: mitem = get_by_name(cls, inptval);
+    if ((mitem == None) or ((typestr in ["name", "age"]) and len(mitem) < 1)):
+        print(f"Invalid {typestr} {inptval} used here! No {getTypeStringFrom(cls)}s found " +
+              f"with that {typestr}!");
     else:
         if (pres): print(mitem);
     return mitem;
+
+def find_by_id(cls, pres = True):
+    return findByNameIdOrAge(cls, "id", pres);
 
 def find_by_name(cls, pres = True):
-    name = input("Enter the name here: ");
-    mitem = get_by_name(cls, name);
-    if (mitem == None): print(f"Invalid name {name} used here! No items found with that name!");
-    else:
-        if (pres): print(mitem);
-    return mitem;
+    return findByNameIdOrAge(cls, "name", pres);
 
 def find_by_age(cls, pres = True):
-    age = getIntInputFromUser("Enter the age: ");
-    mitem = get_by_age(cls, age);
-    if (mitem == None): print(f"Invalid age {age} used here! No items found with that age!");
-    else:
-        if (pres): print(mitem);
-    return mitem;
+    return findByNameIdOrAge(cls, "age", pres);
 
 
 def find_by(cls, typestr, pres = True):
@@ -90,7 +97,7 @@ def getAllUserInputs(noid=False, reqlgid=True, useleagueid=True, omsg=""):
 def listSwimmersOn(cls):
     if (isClsCorrectType(cls)):
         mitem = find_by_id(cls, False);
-        if (mitem == None): print("Invalid id found and used for the swim team/swimleague!");
+        if (mitem == None): print("Invalid id found and used for the swim team/swim league!");
         else:
             for s in mitem.swimmers(): print(s);
     else: print("The class is not the correct type!");

@@ -47,7 +47,6 @@ def genMenuStrs():
         myfunccalltypeonly.append(None);
     return [mstrs, myfunccallsnotype, myfunccalltypeonly];
 
-
 def main(menustrs):
     menu(menustrs);
     while True:
@@ -64,9 +63,9 @@ def main(menustrs):
                 print("Invalid choice! Your choice must be a number ");
                 print("(unless you want the \"quit\" or \"help\" options)!");
             if (noerror):
-                if (mnum < 2 or len(menustrs[0]) + 2 - 1 < mnum):
-                    print("Invalid choice! Number is out of range (0-" +
-                          str(len(menustrs[0]) + 2 - 1) + " (inclusive))!");
+                maxnumcs = len(menustrs[0]) + 2 - 1;
+                if (mnum < 2 or maxnumcs < mnum):
+                    print("Invalid choice! Number is out of range (0-" + str(maxnumcs) + " (inclusive))!");
                 else:
                     funcinvoked = False;
                     for n in range(len(menustrs[1])):
@@ -77,8 +76,6 @@ def main(menustrs):
                             break;
                     if (funcinvoked): pass;
                     else: raise Exception("The function must have been invoked, but it was not!");
-
-
 
 def menu(menustrs):
     print("Please select an option:");
