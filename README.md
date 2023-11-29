@@ -2,7 +2,7 @@
 
 This program will first greet you with a list of options that you can choose from.
 
-# Example Run Through ONLY:
+## Example Run Through ONLY:
 
 Please select an option:
 0. Exits the program (alternatives are: quit, Quit, Exit, EXIT, QUIT, q, e)
@@ -46,7 +46,7 @@ Invalid age 10 used here! No Swimmers found with that age!
 > 0
 Goodbye!
 
-# Explanation of Options:
+## Explanation of Options:
 
 From there, it will do one of the options that you selected.
 
@@ -66,22 +66,25 @@ Option 1, help, h, Help, HELP, or ? allow you to see the menu again.
 
 If you enter something that is not allowed, it is not allowed or out of range if it was the correct type.
 
-## KNOWN ISSUE
-NOTE: Database is cleared when the interface opens, so it is synced with the instances created and displayed by the interface.
+## AN IMPORTANT NOTE ABOUT THE NUMBERS IN THIS FILE:
+The actual interface may contain other options allowing the user to modify the tables. Which means the numbers are different yet these options (abilities) still exist.
 
-# Other Notes:
+## START UP
+NOTE: Information is read in from the database and tables are created when the interface opens, so it is synced with the instances created and displayed by the interface.
+
+## Other Notes:
 The database is an SQLite Database. So you can use the SQLite DB Browser, or VS Code and SQLite and SQLite Viewer Extensions to view it, etc. There are other tools out there to view, and modify it. Just to name a few.
 
-# Phase 3 CLI+ORM Project Template
+## Phase 3 CLI+ORM Project Template
 
-## Learning Goals
+### Learning Goals
 
 - Discuss the basic directory structure of a CLI.
 - Outline the first steps in building a CLI.
 
 ---
 
-## Introduction
+### Introduction
 
 You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
 for a project template for your CLI.
@@ -108,7 +111,7 @@ delete the files if you want.
 
 ---
 
-## Generating Your Environment
+### Generating Your Environment
 
 You might have noticed in the file structure- there's already a Pipfile!
 
@@ -122,7 +125,7 @@ pipenv shell
 
 ---
 
-## Generating Your CLI
+### Generating Your CLI
 
 A CLI is, simply put, an interactive script and prompts the user and performs
 operations based on user input.
@@ -203,7 +206,7 @@ related to:
 
 ---
 
-## Updating README.md
+### Updating README.md
 
 `README.md` is a Markdown file that should describe your project. You will
 replace the contents of this `README.md` file with a description of **your**
@@ -214,7 +217,7 @@ curriculum, but it's not a particularly difficult language to learn (if you've
 ever left a comment on Reddit, you might already know the basics). Refer to the
 cheat sheet in this assignments's resources for a basic guide to Markdown.
 
-### What Goes into a README?
+#### What Goes into a README?
 
 This README serves as a template. Replace the contents of this file to describe
 the important files in your project and describe what they do. Each Python file
@@ -231,7 +234,7 @@ these in if you're feeling comfortable with Markdown.
 
 ---
 
-## Conclusion
+### Conclusion
 
 A lot of work goes into a good CLI, but it all relies on concepts that you've
 practiced quite a bit by now. Hopefully this template and guide will get you off
@@ -241,6 +244,6 @@ Happy coding!
 
 ---
 
-## Resources
+### Resources
 
 - [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
