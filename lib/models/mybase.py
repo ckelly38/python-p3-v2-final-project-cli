@@ -71,9 +71,61 @@ class MyBase:
         #usefull False, noid True, useaddstronly True, addstr " = ?"
         return "" + self.getColListAsString(False, noid, True, "?");
 
+
+    def genSelectSQLCommand(self, colnames=[], tablenames=[], unique=False, useallcols=False,
+                            addwhere=False):
+        #SELECT * FROM tablenames WHERE ...
+        #SELECT cola, colb, colc, FROM tablename WHERE ...
+        #SELECT tablenamea.cola, tablenameb.colb, tablenameb.colc, FROM tablenames WHERE ...
+        basecmdstr = "SELECT ";
+        if (unique): basecmdstr += "DISTINCT ";
+        tnmslen = len(tablenames);
+        cnmslen = len(colnames);
+        usedot = False;
+        if (useallcols):
+            if (cnmslen < 1): pass;
+            else: raise Exception("when using all columns the colnames must not be provided!");
+        else:
+            if (cnmslen < 1): raise Exception("there must be at least one colname!");
+        if (tnmslen > 1):
+            if (tnmslen == cnmslen): usedot = True;
+            else:
+                if (useallcols): pass;
+                else:
+                    raise Exception("column names must be equal to table names length for more than one!");
+        elif (tnmslen == 1): pass;
+        else: raise Exception("there must be at least one tablename!");
+        atleasttwotablenames = False;
+        if (tnmslen > 1):
+            for i in range(tnmslen):
+                for k in range(i + 1, tnmslen):
+                    if (tablenames[i] == tablenames[k]): pass;
+                    else:
+                        atleasttwotablenames = True;
+                        break;
+                if (atleasttwotablenames): break;
+            if (atleasttwotablenames): pass;
+            else:
+                raise Exception("there must be at least 2 unique tablenames if there are at least 2 " +
+                                "tablenames given! Duplicate names are not allowed, unless at least 2 " +
+                                "unique tablenames are present!");
+        colsstr = "";
+        for i in range(cnmslen):
+            if (usedot): colsstr += colnames[i] + "." + tablenames[i];
+            else: colsstr += colnames[i];
+            if (i + 1 < cnmslen): colsstr += ", ";
+        tnmsstr = "";
+        for i in range(tnmslen):
+            tnmsstr += tablenames[i];
+            if (i + 1 < tnmslen): tnmsstr += ", ";
+        mystr = "" + basecmdstr + colsstr + " FROM " + tnmsstr;
+        if (addwhere): mystr += " WHERE ";
+        return mystr;
+
     def genSQLCommand(self, commandtypestr, noidoninsert = True):
         self.valMustBeBool(noidoninsert, "noidoninsert");
-        basecmdstr = "" + commandtypestr + " " + self.getTableName();
+        tnm = self.getTableName();
+        basecmdstr = "" + commandtypestr + " " + tnm;
         #print(f"basecmdstr = {basecmdstr}");
         mystr = "";
         if (commandtypestr == "CREATE TABLE"):
@@ -91,6 +143,8 @@ class MyBase:
             mystr += " VALUES " + self.replaceQuestionsForValues(noidoninsert);
         elif (commandtypestr == "UPDATE"):
             mystr = "" + basecmdstr + " SET " + self.getNameEqualsColList() + " WHERE ";
+        elif (commandtypestr == "PRAGMA"):
+            mystr = "" + commandtypestr + " table_info(" + tnm + ")";
         else: raise Exception("INVALID SQL COMMAND TYPE!");
         #print(f"final command = {mystr}");
         return "" + mystr;

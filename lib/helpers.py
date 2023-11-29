@@ -191,7 +191,8 @@ def maketable(cls):
     if (isClsCorrectType(cls)):
         cls.make_table();
         #print("Table successfully created!");
-    else: print("The class is not the correct type!");
+        return True;
+    else: raise Exception("The class is not the correct type!");
 
 def dropalltables():
     try:
@@ -226,6 +227,30 @@ def makealltables():
     except:
         #print("The swimleagues table already created!");
         pass;
+
+def startWithBlankDB():
+    #solution 1: remove all of the information in the database. (applied)
+    dropalltables();
+    makealltables();
+
+def loadObjectsFromDB():
+    #solution 2: read in all information from the database and generate the instances from it. (not applied)
+    #need to know if the DB has the tables there or not
+    #CURSOR.execute("PRAGMA table_info("tablename")").fetchall();
+    #will return info if it exists; 0 rows if does not
+    #maketable(cls) will throw an error if the table exists... if the table does not exist returns True.
+    #need to know how many items are on each table
+    #need to know their IDs
+    #need a way to get the information from the database
+    #create() method could come in handy...
+    #maybe the constructor will be used...
+    #CURSOR.execute("SELECT * FROM tablename").fetchall() will be handy...
+    pass;
+
+def syncDB():
+    #startWithBlankDB();#solution #1
+    loadObjectsFromDB();#solution #2
+    pass;
 
 def exit_program():
     print("Goodbye!");

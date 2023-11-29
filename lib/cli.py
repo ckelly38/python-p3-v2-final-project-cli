@@ -93,10 +93,11 @@ if __name__ == "__main__":
     #solution 1: remove all of the information in the database. (applied)
     #solution 2: read in all information from the database and generate the instances from it.
     #(not applied)
+    #solution 3: serialize and deserialize objects when needed... (not applied)
     #
     #solution 2 may be better, but it is not applied; making us wonder
     #why we even have the database in the first place?
     #
-    dropalltables();
-    makealltables();
+    #startWithBlankDB();#sollution #1
+    syncDB();
     main(genMenuStrs());
