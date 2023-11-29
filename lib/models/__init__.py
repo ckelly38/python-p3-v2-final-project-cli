@@ -1,4 +1,4 @@
 import sqlite3
 
-CONN = sqlite3.connect('company.db')
-CURSOR = CONN.cursor()
+CONN = sqlite3.connect('swimleague.db');
+CURSOR = CONN.cursor();

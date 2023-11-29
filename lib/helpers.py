@@ -183,14 +183,23 @@ def delete(cls):
 
 def deltable(cls):
     if (isClsCorrectType(cls)):
-        cls.delete_table();
-        #print("Table successfully removed!");
+        if (cls.tableExists()):
+            cls.delete_table();
+            print("Table " + cls.getRequiredTableName() + " successfully removed!");
+            return True;
+        else:
+            print("Table " + cls.getRequiredTableName() + " already removed!");
+            return False;
     else: print("The class is not the correct type!");
 
 def maketable(cls):
     if (isClsCorrectType(cls)):
-        cls.make_table();
-        #print("Table successfully created!");
+        if (cls.tableExists()):
+            print("Table " + cls.getRequiredTableName() + " already exists!");
+            return False;
+        else:
+            cls.make_table();
+            print("Table " + cls.getRequiredTableName() + " successfully created!");
         return True;
     else: raise Exception("The class is not the correct type!");
 
@@ -228,6 +237,14 @@ def makealltables():
         #print("The swimleagues table already created!");
         pass;
 
+def tableexists(cls):
+    if (isClsCorrectType(cls)):
+        rval = cls.tableExists();
+        if (rval): print("Yes! Table " + cls.getRequiredTableName() + " exists!");
+        else: print("No! Table " + cls.getRequiredTableName() + " does not exist!");
+        return rval;
+    else: raise Exception("The class is not the correct type!");
+
 def startWithBlankDB():
     #solution 1: remove all of the information in the database. (applied)
     dropalltables();
@@ -239,13 +256,44 @@ def loadObjectsFromDB():
     #CURSOR.execute("PRAGMA table_info("tablename")").fetchall();
     #will return info if it exists; 0 rows if does not
     #maketable(cls) will throw an error if the table exists... if the table does not exist returns True.
+    #wrote a tableExists() class method to do the pragma command to handle that problem
     #need to know how many items are on each table
     #need to know their IDs
     #need a way to get the information from the database
     #create() method could come in handy...
     #maybe the constructor will be used...
     #CURSOR.execute("SELECT * FROM tablename").fetchall() will be handy...
-    pass;
+
+    #for each table:
+    #if the table does not exist, make it.
+    #if it does exist, read in data from it.
+    print("BEGIN LOADING THE DATA INTO THE PROGRAM FROM THE DATABASE NOW!");
+    clsses = [SwimLeague, SwimTeam, Swimmer];
+    for c in clsses:
+        if (c.tableExists()):
+            #read the data...
+            print("READING IN THE DATA FROM THE DATABASE NOW FOR " + getTypeStringFrom(c) + "!");
+            res = c.getAllDataFromDB();
+            print(res);
+            if (len(res) < 1):
+                print("no data to be read in! Table " + c.getRequiredTableName() + " does exist!");
+            else:
+                for items in res:
+                    print(items);
+                    mvals = [];
+                    if (len(items) > 1):
+                        mvals = [items[i] for i in range(len(items)) if i != 0];
+                    mvals.append(items[0]);
+                    mitem = c.create(tuple(mvals), True);
+                    print(mitem);
+                    print("item created successfully!");
+            print("DONE READING IN THE DATA FOR " + getTypeStringFrom(c) + "!");
+        else:
+            print("no data to be read in! Table " + c.getRequiredTableName() + " does not exist!");
+            print("Now creating the table!");
+            c.make_table();
+            print("Successfully created the table!");
+    print("DONE LOADING THE DATA INTO THE PROGRAM FROM THE DATABASE ON STARTUP!");
 
 def syncDB():
     #startWithBlankDB();#solution #1

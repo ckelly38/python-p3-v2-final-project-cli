@@ -44,15 +44,6 @@ class MyTable(MyBase):
         else: return MyTable.makeBase();
 
     @classmethod
-    def make_table(cls):
-        #print(f"make_table calling class = cls = {cls}");
-        cls.makeSureCallerTableIsSetUp();
-        #CURSOR.execute("CREATE tablename (id INTEGER PRIMARY KEY, cola TYPEA FOREIGN KEY,
-        #colb TYPEB, colc, TYPEC)");
-        CURSOR.execute(cls.getBase().genSQLCommand("CREATE TABLE"));
-        CONN.commit();
-
-    @classmethod
     def makeSureCallerTableIsSetUp(cls):
         #print(f"called inittable from MYTABLE class caller class = cls = {cls}");
         #print(f"cls.getTableName() = {cls.getTableName()}");
@@ -60,6 +51,15 @@ class MyTable(MyBase):
         ctnm = cls.getTableName();
         rtnm = cls.getRequiredTableName();
         if (ctnm == "" or ctnm != rtnm): cls.inittable();
+
+    @classmethod
+    def make_table(cls):
+        #print(f"make_table calling class = cls = {cls}");
+        cls.makeSureCallerTableIsSetUp();
+        #CURSOR.execute("CREATE tablename (id INTEGER PRIMARY KEY, cola TYPEA FOREIGN KEY,
+        #colb TYPEB, colc, TYPEC)");
+        CURSOR.execute(cls.getBase().genSQLCommand("CREATE TABLE"));
+        CONN.commit();
 
     @classmethod
     def delete_table(cls):
@@ -78,15 +78,19 @@ class MyTable(MyBase):
         cls.__tablename = cls.getBase().getTableName();
     
     @classmethod
-    def create(cls, vals):
+    def create(cls, vals, nosave = False):
+        cls.makeSureCallerTableIsSetUp();
         if (type(vals) == tuple): pass;
         else: raise Exception("vals must be a defined tuple!");
         #print("INSIDE OF MYTABLE CREATE()!");
         #print(f"cls = {cls}");
         #print("cls constructor called inside of create()!");
+        #print(f"nosave = {nosave}");
+        #print(vals);
         mitem = cls(vals);
         #print("DONE with cls constructor now calling save()!");
-        mitem.save(vals);
+        if (nosave): mitem.setId(vals[len(vals) - 1]);
+        else: mitem.save(vals);
         cls.all.append(mitem);
         return mitem;
     
@@ -129,3 +133,19 @@ class MyTable(MyBase):
 
     @classmethod
     def get_all(cls): return cls.all;
+
+    @classmethod
+    def tableExists(cls):
+        cls.makeSureCallerTableIsSetUp();
+        res = CURSOR.execute(cls.getBase().genSQLCommand("PRAGMA", True)).fetchall();
+        CONN.commit();
+        #print(res);
+        if (res == None): return False;
+        else: return (len(res) > 0);
+    
+    @classmethod
+    def getAllDataFromDB(cls):
+        res = CURSOR.execute(cls.getBase().genSelectSQLCommand(
+            [], [cls.getBase().getTableName()], False, True, False)).fetchall();
+        CONN.commit();
+        return res;

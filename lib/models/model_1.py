@@ -1,7 +1,7 @@
-from swimmer import Swimmer;
-from swimmerbase import SwimmerBase;
-from swimteam import SwimTeam;
-from swimleague import SwimLeague;
+from models.swimmer import Swimmer;#models.
+from models.swimmerbase import SwimmerBase;#models.
+from models.swimteam import SwimTeam;#models.
+from models.swimleague import SwimLeague;#models.
 
 
 #MyTable.__tablename;
@@ -33,8 +33,13 @@ print(SwimmerBase.all);
 print(SwimmerBase.getBase().getColListAsString(True));
 print();
 print("NOW ATTEMPT TO CREATE A NEW SWIMMERBASE TABLE!");
-if (True): SwimmerBase.delete_table();
+if (False): SwimmerBase.delete_table();
+print(SwimmerBase.tableExists());
 SwimmerBase.make_table();
+print(SwimmerBase.tableExists());
+#SwimmerBase.delete_table();
+#print(SwimmerBase.tableExists());
+#SwimmerBase.make_table();
 print("SUCCESSFULLY CREATED A NEW SWIMMERBASE TABLE!");
 print();
 print("calling create on SwimmerBase class!");
@@ -105,5 +110,8 @@ if (mstr in ["1", "y", "Y", "yes", "Yes", "YES"]): pass;
 else: exit();
 omn.delete();
 mhsl.delete();
+dwd.delete();
+bro.delete();
+ohr.delete();
 SwimmerBase.delete_table();
 print("DONE CLEANING UP!");

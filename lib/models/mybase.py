@@ -77,6 +77,11 @@ class MyBase:
         #SELECT * FROM tablenames WHERE ...
         #SELECT cola, colb, colc, FROM tablename WHERE ...
         #SELECT tablenamea.cola, tablenameb.colb, tablenameb.colc, FROM tablenames WHERE ...
+        self.valMustBeBool(unique, "unique");
+        self.valMustBeBool(useallcols, "useallcols");
+        self.valMustBeBool(addwhere, "addwhere");
+        if (type(colnames) == list and type(tablenames) == list): pass;
+        else: raise Exception("colnames and tablenames must both be lists!");
         basecmdstr = "SELECT ";
         if (unique): basecmdstr += "DISTINCT ";
         tnmslen = len(tablenames);
@@ -110,16 +115,19 @@ class MyBase:
                                 "tablenames given! Duplicate names are not allowed, unless at least 2 " +
                                 "unique tablenames are present!");
         colsstr = "";
-        for i in range(cnmslen):
-            if (usedot): colsstr += colnames[i] + "." + tablenames[i];
-            else: colsstr += colnames[i];
-            if (i + 1 < cnmslen): colsstr += ", ";
+        if (useallcols): colsstr = "*";
+        else:
+            for i in range(cnmslen):
+                if (usedot): colsstr += colnames[i] + "." + tablenames[i];
+                else: colsstr += colnames[i];
+                if (i + 1 < cnmslen): colsstr += ", ";
         tnmsstr = "";
         for i in range(tnmslen):
             tnmsstr += tablenames[i];
             if (i + 1 < tnmslen): tnmsstr += ", ";
         mystr = "" + basecmdstr + colsstr + " FROM " + tnmsstr;
         if (addwhere): mystr += " WHERE ";
+        #print(mystr);
         return mystr;
 
     def genSQLCommand(self, commandtypestr, noidoninsert = True):

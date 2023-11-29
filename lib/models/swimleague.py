@@ -38,7 +38,7 @@ class SwimLeague(SwimmerBase):
     #    return [item for item in SwimmerBase.get_all() if isinstance(item, SwimLeague)];
 
     def teams(self):
-        from models.swimteam import SwimTeam;
+        from models.swimteam import SwimTeam;#models.
         return [tm for tm in SwimTeam.get_all() if tm.getLeagueId() == self.id];
 
     def swimmers(self):

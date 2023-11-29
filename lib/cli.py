@@ -16,7 +16,9 @@ def genPartialMenuStrs(opts, bfrstr="", aftrstr=""):
 def genMenuStrs():
     findoptsstrs = genPartialMenuStrs(["ID", "NAME", "AGE"], "Find an instance by ", " for ");
     crudoptsstrs = genPartialMenuStrs(["Create a new", "Update an", "Delete an"], "", " instance of ");
-    #tablecrudsstrs = genPartialMenuStrs(["Create a", "Delete a"], "", " table for ");
+    tablecrudsstrs = genPartialMenuStrs(["Create a", "Delete a"], "", " table for ");
+    tableexistsstrs = genPartialMenuStrs(["Does table exist"], "", " for ");
+    tableexistsfuncs = [tableexists];
     reloptsstrs = ["List the Swimmers on the SwimTeam", "List the SwimLeague for the SwimTeam",
          "List the Swimmers in the SwimLeague", "List the SwimTeams in the SwimLeague",
          "List the SwimTeam for the Swimmer", "List the SwimLeague for the Swimmer"];
@@ -24,14 +26,14 @@ def genMenuStrs():
                     listSwimTeamsForLeague, listSwimTeamForSwimmer, listSwimLeagueForSwimmer];
     findoptsfuncs = [find_by_id, find_by_name, find_by_age];
     crudfuncts = [create, update, delete];
-    #tablecrudfuncts = [maketable, deltable];
+    tablecrudfuncts = [maketable, deltable];
     optsbeforefind = ["List all instances of "];
     functsoptsbeforefind = [list_all];
-    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs];#, tablecrudsstrs
-    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts];#, tablecrudfuncts
-    mytypes = ["Swimmer", "SwimTeam", "SwimLeague"];
-    mstrs = [];
+    myopts = [optsbeforefind, findoptsstrs, crudoptsstrs, tablecrudsstrs, tableexistsstrs];#
+    myfunctopts = [functsoptsbeforefind, findoptsfuncs, crudfuncts, tablecrudfuncts, tableexistsfuncs];#
     mytypeclasses = [Swimmer, SwimTeam, SwimLeague];
+    mytypes = [getTypeStringFrom(c) for c in mytypeclasses];
+    mstrs = [];
     myfunccallsnotype = [];
     myfunccalltypeonly = [];
     for i in range(len(mytypes)):
@@ -78,6 +80,7 @@ def main(menustrs):
                     else: raise Exception("The function must have been invoked, but it was not!");
 
 def menu(menustrs):
+    print();
     print("Please select an option:");
     print("0. Exits the program (alternatives are: quit, Quit, Exit, EXIT, QUIT, q, e)");
     print("1. Displays this menu again (alternatives are: help, h, HELP, Help, ?)");
