@@ -34,16 +34,16 @@ Please select an option:
 26. List the SwimTeams in the SwimLeague.
 27. List the SwimTeam for the Swimmer.
 28. List the SwimLeague for the Swimmer.
-> 3
+## > 3
 Enter the id: 1
 Invalid id 1 used here! No Swimmers found with that id!
-> 4
+## > 4
 Enter the name here: Twerp
 Invalid name Twerp used here! No Swimmers found with that name!
-> 5
+## > 5
 Enter the age: 10
 Invalid age 10 used here! No Swimmers found with that age!
-> 0
+## > 0
 Goodbye!
 
 ## Explanation of Options:
