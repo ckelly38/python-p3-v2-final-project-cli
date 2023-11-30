@@ -93,9 +93,8 @@ if __name__ == "__main__":
     #when the application is closed and reopened there are no instances of the classes (objects),
     #however, there may be information saved on the database.
     #
-    #solution 1: remove all of the information in the database. (applied)
-    #solution 2: read in all information from the database and generate the instances from it.
-    #(not applied)
+    #solution 1: remove all of the information in the database. (was applied)
+    #solution 2: read in all information from the database and generate the instances from it. (applied)
     #solution 3: serialize and deserialize objects when needed... (not applied)
     #
     #solution 2 may be better, but it is not applied; making us wonder

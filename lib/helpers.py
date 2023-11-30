@@ -17,12 +17,35 @@ def get_all(cls):
     if (isClsCorrectType(cls)): return cls.get_all();
     else: raise Exception("The class is not the correct type!");
 
+def printItemHeaders(cls):
+    if (cls == None): return;
+    #ID|name|age|TeamID/LeagueID
+    print("ID|Name|age", end="");
+    if (cls == Swimmer): print("|TeamID");
+    elif (cls == SwimTeam): print("|LeagueID");
+    else: print();       
+
+def printItem(item):
+    if (item == None):
+        print("None");
+        return;
+    else:
+        print(str(item.id) + "|" + item.name + "|" + str(item.age), end="");
+        if (type(item) == Swimmer): print("|" + str(item.teamid));
+        elif (type(item) == SwimTeam): print("|" + str(item.leagueid));
+        else: print();
+
+def printItemWithHeaders(item):
+    printItemHeaders(type(item));
+    printItem(item);
+
 def list_all(cls):
     mall = get_all(cls);
     if (mall == None or len(mall) < 1): print("No " + getTypeStringFrom(cls) + "s!");
     else:
-        for item in mall: print(item);
-
+        printItemHeaders(cls);
+        for item in mall: printItem(item);
+    
 def getIntInputFromUser(msg):
     if (type(msg) == str): pass;
     else: raise Exception("The input message must be of type string!");
@@ -54,7 +77,7 @@ def findByNameIdOrAge(cls, typestr, pres = True):
         print(f"Invalid {typestr} {inptval} used here! No {getTypeStringFrom(cls)}s found " +
               f"with that {typestr}!");
     else:
-        if (pres): print(mitem);
+        if (pres): printItemWithHeaders(mitem);
     return mitem;
 
 def find_by_id(cls, pres = True):
@@ -66,7 +89,6 @@ def find_by_name(cls, pres = True):
 def find_by_age(cls, pres = True):
     return findByNameIdOrAge(cls, "age", pres);
 
-
 def find_by(cls, typestr, pres = True):
     mitem = None;
     if (type(typestr) == str): pass;
@@ -77,7 +99,7 @@ def find_by(cls, typestr, pres = True):
     else: raise Exception("Invalid typestring found and used here!");
     if (mitem == None): print("No items found!");
     else:
-        if (pres): print(mitem);
+        if (pres): printItemWithHeaders(mitem);
     return mitem;
 
 def getAllUserInputs(noid=False, reqlgid=True, useleagueid=True, omsg=""):
@@ -99,7 +121,8 @@ def listSwimmersOn(cls):
         mitem = find_by_id(cls, False);
         if (mitem == None): print("Invalid id found and used for the swim team/swim league!");
         else:
-            for s in mitem.swimmers(): print(s);
+            printItemHeaders(Swimmer);
+            for s in mitem.swimmers(): printItem(s);
     else: print("The class is not the correct type!");
 
 def listSwimmersOnTeam(): listSwimmersOn(SwimTeam);
@@ -111,7 +134,7 @@ def listSwimLeagueFor(cls):
     #then get the swimmers
     mitem = find_by_id(cls, False);
     if (mitem == None): print("Invalid id found and used for the swim team!");
-    else: print(mitem.league());
+    else: printItemWithHeaders(mitem.league());
 
 def listSwimLeagueForTeam(): listSwimLeagueFor(SwimTeam);
 
@@ -122,12 +145,13 @@ def listSwimTeamsForLeague():
     if (lg == None): print("Invalid id found and used for the swim league!");
     else:
         tms = lg.teams();
-        for tm in tms: print(tm);
+        printItemHeaders(SwimTeam);
+        for tm in tms: printItem(tm);
 
 def listSwimTeamForSwimmer():
     s = find_by_id(Swimmer, False);
     if (s == None): print("Invalid id found and used for the swimmer!");
-    else: print(s.team());
+    else: printItemWithHeaders(s.team());
 
 def create(cls):
     if (isClsCorrectType(cls)):
@@ -141,7 +165,7 @@ def create(cls):
         mitem = None;
         if (cls == SwimLeague): mitem = cls.create((usrinputs[1], usrinputs[2]));
         else: mitem = cls.create((usrinputs[1], usrinputs[2], usrinputs[3]));
-        print(mitem);
+        printItemWithHeaders(mitem);
         print("Successfully created the item!");
     else: print("The class is not the correct type!");
 
@@ -166,7 +190,7 @@ def update(cls):
                 if (cls == Swimmer): mitem.setTeamId(usrinputs[3]);
                 else: mitem.setLeagueId(usrinputs[3]);
                 mitem.update((usrinputs[1], usrinputs[2], usrinputs[3]));
-            print(mitem);
+            printItemWithHeaders(mitem);
             print("Successfully updated the item!");
     else: print("The class is not the correct type!");
 
@@ -274,18 +298,18 @@ def loadObjectsFromDB():
             #read the data...
             print("READING IN THE DATA FROM THE DATABASE NOW FOR " + getTypeStringFrom(c) + "!");
             res = c.getAllDataFromDB();
-            print(res);
+            #print(res);
             if (len(res) < 1):
                 print("no data to be read in! Table " + c.getRequiredTableName() + " does exist!");
             else:
                 for items in res:
-                    print(items);
+                    #print(items);
                     mvals = [];
                     if (len(items) > 1):
                         mvals = [items[i] for i in range(len(items)) if i != 0];
                     mvals.append(items[0]);
                     mitem = c.create(tuple(mvals), True);
-                    print(mitem);
+                    printItemWithHeaders(mitem);
                     print("item created successfully!");
             print("DONE READING IN THE DATA FOR " + getTypeStringFrom(c) + "!");
         else:
